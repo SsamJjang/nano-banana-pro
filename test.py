@@ -15,17 +15,22 @@ def save_binary_file(file_name, data):
     print(f"File saved to to: {file_name}")
 
 
-def generate():
+def generate(img_path):
     client = genai.Client(
-        api_key=os.environ.get("GEMINI_API_KEY"),
+        api_key=os.environ.get("GEMINI_API_KEY")
     )
+
+    with open(img_path, 'rb') as image_file:
+        image_data = image_file.read()
+
 
     model = "gemini-3-pro-image-preview"
     contents = [
         types.Content(
             role="user",
             parts=[
-                types.Part.from_text(text="""INSERT_INPUT_HERE"""),
+                types.Part.from_bytes(data=image_data, mime_type="image/png"),
+                types.Part.from_text(text="make a character goods based off of this photo"),
             ],
         ),
     ]
@@ -67,4 +72,4 @@ def generate():
             print(chunk.text)
 
 if __name__ == "__main__":
-    generate()
+    generate('jvke.jpg')
